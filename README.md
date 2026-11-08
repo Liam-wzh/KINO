@@ -8,7 +8,7 @@
 
 🪟 Windows 桌面 · 📊 用量可视化 · 🔀 多站点切换 · ✨ Fluent 卡片
 
-[下载](https://github.com/Liam-wzh/KINO/releases) · [快速开始](#getting-started) · [连接站点](#connect) · [问题反馈](https://github.com/Liam-wzh/KINO/issues) · [余时中转站](https://aixyushi.com/)
+[📥 下载 Windows 发布版](https://github.com/Liam-wzh/KINO/releases/latest) · [快速开始](#getting-started) · [连接站点](#connect) · [问题反馈](https://github.com/Liam-wzh/KINO/issues) · [余时中转站](https://aixyushi.com/)
 
 </div>
 
@@ -69,7 +69,7 @@
 
 运行环境：**Windows + .NET Framework 4.8**。目前主要在 Windows 11 上验证。
 
-在 [Releases](https://github.com/Liam-wzh/KINO/releases) 查看发布版本；尚无发行版时，可在 [Windows build](https://github.com/Liam-wzh/KINO/actions/workflows/build.yml) 的成功构建记录中下载 `kino-windows-preview` 制品，再解压其中的程序压缩包。
+**[📥 下载 Windows 发布版](https://github.com/Liam-wzh/KINO/releases/latest)**，选择附件中的 `KINO-<版本>-windows.zip`。这是可直接运行的免安装版，**无需安装开发工具或自行构建**。GitHub 自动生成的 `Source code` 压缩包仅包含源码。
 
 1. 下载并完整解压 `KINO-<版本>-windows.zip`，运行 `KINO.exe`。保留同目录的 `x86`、`x64`、`arm64` 文件夹，它们包含图表所需的原生依赖。
 2. 首次启动时选择平台、填写 HTTPS 站点地址和凭据，点击 **验证并连接**。也可以点击 **先看演示**，离线体验界面。
@@ -189,6 +189,15 @@ pwsh -NoProfile -File tools/publish.ps1
 界面截图位于 `artifacts/previews`。程序提供 `--preview`（演示卡片）、`--connect-preview`（空白连接向导）、`--notification-preview`（发送演示通知，20 秒后退出）和 `--diagnose`（任务栏诊断，8 秒后退出）；这些模式隔离真实账户配置。
 
 GitHub Actions 在推送、拉取请求或手动触发时执行 Windows 构建、核心测试与打包，运行记录见 [Windows build](https://github.com/Liam-wzh/KINO/actions/workflows/build.yml)。UI 与 Explorer 任务栏行为需要本机检查。源码与下载包分别维护，`artifacts/` 不提交到仓库。
+
+发布新版本时，先更新 `src/Kino/Kino.csproj` 的版本并提交，再创建对应的 `v<版本>` 标签并推送。`Windows release` 工作流会检查标签与项目版本一致，运行核心测试、生成 ZIP 和 SHA256 文件，并发布到 GitHub Releases。例如当前版本：
+
+```powershell
+git tag -a v0.6.2 -m 'KINO 0.6.2'
+git push origin v0.6.2
+```
+
+当前维护工作区的 `origin` 已配置向 GitHub 与 Gitee 同时推送；新克隆的仓库需自行添加 Gitee 远端。Gitee 的源码与标签可同步，GitHub Releases 的附件需要另行上传到 Gitee。
 
 核心代码位于 `src/Kino`：`Models` 定义配置与可空指标，`Services` 负责接口、状态与加密保存，`Interop` 负责原生任务栏，`UI` 负责卡片和窗口。
 

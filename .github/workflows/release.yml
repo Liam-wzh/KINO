@@ -1,0 +1,79 @@
+name: Windows release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-2022
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check release version
+        run: |
+          $project = [xml](Get-Content -LiteralPath 'src/Kino/Kino.csproj' -Raw)
+          $version = [string]$project.Project.PropertyGroup.Version
+          if ($version -notmatch '^\d+\.\d+\.\d+$' -or $env:GITHUB_REF_NAME -ne "v$version") {
+            throw 'The release tag must equal v plus the project version.'
+          }
+          "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+      - name: Build and run core tests
+        run: ./tools/check.ps1 -Configuration Release
+      - name: Build Windows release package
+        run: ./tools/publish.ps1 -Configuration Release
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = $env:RELEASE_VERSION
+          $archive = "artifacts/KINO-$version-windows.zip"
+          $checksum = "$archive.sha256"
+          $expectedHash = ((Get-Content -LiteralPath $checksum -Raw).Trim() -split '\s+')[0]
+          if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash -ne $expectedHash) {
+            throw 'Release archive checksum verification failed.'
+          }
+          $notes = @"
+          ## 🚀 下载与使用
+          下载下方 **KINO-$version-windows.zip**，完整解压后运行 **KINO.exe**，无需自行构建。
+          保留同目录的 x86、x64、arm64 文件夹。需要 Windows 和 .NET Framework 4.8。
+          GitHub 自动生成的 Source code 压缩包是源码，不是可运行程序。
+
+          ## ✨ 功能
+          - 任务栏显示余额、今日消费、Token 和接口延迟，点击展开 Fluent 用量卡片。
+          - 支持兼容 New API / Sub2API 的站点，自定义显示项、多站点快速切换。
+          - 消费趋势、模型统计、浅深主题、金额隐藏及各站点独立的低余额提醒。
+          - 用户令牌通过 Windows DPAPI 在本机加密保存。
+
+          ## 🧪 已知范围
+          主要在 Windows 11 主显示器任务栏验证；Windows 10 尚未实机验证。
+          New API 已完成真实站点只读联调；Sub2API 目前通过模拟接口验证。
+          此版本为免安装便携版，暂无开机启动、自动更新或代码签名。
+
+          由余时工作室出品：[余时 · Yushi](https://aixyushi.com/)。
+          "@
+          $notesPath = 'artifacts/release-notes.md'
+          [System.IO.File]::WriteAllText($notesPath, $notes, [System.Text.UTF8Encoding]::new($false))
+          gh release create $env:GITHUB_REF_NAME $archive $checksum --repo $env:GITHUB_REPOSITORY --verify-tag --title "KINO $version · Windows 发布版" --notes-file $notesPath --latest
+          if ($LASTEXITCODE -ne 0) { throw 'Publishing the GitHub release failed.' }
