@@ -1,0 +1,22 @@
+<ui:FluentWindow x:Class="Kino.UI.BalanceAlertWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:local="clr-namespace:Kino.UI"
+        Title="余额提醒 · KINO" Icon="/KINO;component/Assets/kino.ico" Width="540" Height="650" MinWidth="480" MinHeight="550" WindowStartupLocation="CenterScreen"
+        ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontFamily="Segoe UI Variable Text, Microsoft YaHei UI" FontSize="13">
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="36" /><RowDefinition /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+        <ui:TitleBar Title="余额提醒 · KINO" ShowMinimize="False" ShowMaximize="False" />
+        <ScrollViewer Grid.Row="1" Padding="24,16,24,20" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <TextBlock Text="低余额提醒" FontSize="25" FontWeight="SemiBold" Margin="0,0,0,7" />
+                <TextBlock x:Name="SiteLabel" TextWrapping="Wrap" Foreground="{DynamicResource KinoMutedBrush}" FontSize="12" Margin="0,0,0,24" />
+                <local:BalanceAlertEditor x:Name="AlertEditor" />
+            </StackPanel>
+        </ScrollViewer>
+        <Border Grid.Row="2" BorderBrush="{DynamicResource KinoBorderBrush}" BorderThickness="0,1,0,0" Padding="20,13">
+            <Grid><Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <TextBlock x:Name="SaveMessage" TextWrapping="Wrap" FontSize="11" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="{DynamicResource KinoMutedBrush}" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal"><Button x:Name="CancelButton" Content="取消" Click="CancelClicked" MinWidth="70" Margin="0,0,8,0" /><ui:Button x:Name="SaveButton" Content="保存提醒" Click="SaveClicked" Appearance="Primary" MinWidth="95" /></StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

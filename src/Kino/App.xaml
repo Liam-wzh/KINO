@@ -1,0 +1,64 @@
+<Application x:Class="Kino.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:local="clr-namespace:Kino.UI"
+             ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Light" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="KinoAccentBrush" Color="#137E70" />
+            <SolidColorBrush x:Key="KinoAccentSoftBrush" Color="#10137E70" />
+            <SolidColorBrush x:Key="KinoSurfaceBrush" Color="#80FFFFFF" />
+            <SolidColorBrush x:Key="KinoPopupBrush" Color="#FCFCFC" />
+            <SolidColorBrush x:Key="KinoBorderBrush" Color="#14000000" />
+            <SolidColorBrush x:Key="KinoMutedBrush" Color="#696969" />
+            <SolidColorBrush x:Key="KinoChartGridBrush" Color="#14000000" />
+            <SolidColorBrush x:Key="KinoWarningBrush" Color="#9C6500" />
+            <ImageBrush x:Key="KinoLogoMask" ImageSource="pack://application:,,,/KINO;component/Assets/logo.png" Stretch="Uniform" />
+            <Style x:Key="KinoLogoStyle" TargetType="Rectangle">
+                <Setter Property="Fill" Value="{DynamicResource KinoAccentBrush}" />
+                <Setter Property="OpacityMask" Value="{StaticResource KinoLogoMask}" />
+                <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="ChromeButtonStyle" TargetType="ButtonBase">
+                <Setter Property="local:Motion.PressFeedback" Value="True" />
+                <Setter Property="Width" Value="30" />
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="ToolTipService.InitialShowDelay" Value="500" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ButtonBase">
+                            <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" /></Trigger>
+                                <Trigger Property="IsPressed" Value="True"><Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" /></Trigger>
+                                <Trigger Property="ToggleButton.IsChecked" Value="True"><Setter Property="Foreground" Value="{DynamicResource KinoAccentBrush}" /><Setter Property="Background" Value="{DynamicResource KinoAccentSoftBrush}" /></Trigger>
+                                <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.4" /></Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="SectionLabel" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Foreground" Value="{DynamicResource KinoMutedBrush}" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+            </Style>
+            <Style x:Key="FormLabel" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="Margin" Value="0,0,0,6" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

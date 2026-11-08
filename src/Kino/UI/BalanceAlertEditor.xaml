@@ -1,0 +1,19 @@
+<UserControl x:Class="Kino.UI.BalanceAlertEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <CheckBox x:Name="AlertEnabledBox" Content="为此站点启用低余额提醒" Margin="0,0,0,22" />
+        <StackPanel x:Name="AlertInputs" IsEnabled="{Binding IsChecked, ElementName=AlertEnabledBox}">
+            <TextBlock Text="余额不高于（USD）" Style="{StaticResource FormLabel}" />
+            <TextBox x:Name="ThresholdBox" MaxLength="30" Margin="0,0,0,5" />
+            <TextBlock Text="支持 0 和小数，例如 5 或 0.50。" Foreground="{DynamicResource KinoMutedBrush}" FontSize="11" Margin="0,0,0,18" />
+            <TextBlock Text="重复提醒间隔（分钟）" Style="{StaticResource FormLabel}" />
+            <TextBox x:Name="CooldownBox" MaxLength="5" Margin="0,0,0,5" />
+            <TextBlock Text="范围 1–10080。余额持续偏低时，间隔到期后再次提醒。" TextWrapping="Wrap" Foreground="{DynamicResource KinoMutedBrush}" FontSize="11" Margin="0,0,0,20" />
+        </StackPanel>
+        <Border Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="6" Padding="12" Margin="0,0,0,18">
+            <TextBlock Text="只检查当前监测的站点。演示数据、断线和未提供的余额不触发提醒。系统通知不包含具体余额或阈值。" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource KinoMutedBrush}" />
+        </Border>
+        <Button x:Name="TestNotificationButton" Content="发送测试通知" Click="TestClicked" HorizontalAlignment="Left" Padding="12,7" />
+        <TextBlock x:Name="TestMessage" Text="可先测试通知；显示效果取决于 Windows 通知与勿扰设置。" TextWrapping="Wrap" Foreground="{DynamicResource KinoMutedBrush}" FontSize="11" Margin="0,9,0,0" />
+    </StackPanel>
+</UserControl>

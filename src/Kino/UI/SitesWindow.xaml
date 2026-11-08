@@ -1,0 +1,69 @@
+<ui:FluentWindow x:Class="Kino.UI.SitesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="站点管理 · KINO" Icon="/KINO;component/Assets/kino.ico" Width="760" Height="560" MinWidth="700" MinHeight="520"
+        WindowStartupLocation="CenterScreen" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <ui:FluentWindow.Resources>
+        <Style x:Key="SiteListItem" TargetType="ListBoxItem">
+            <Setter Property="Margin" Value="0,2" /><Setter Property="Padding" Value="4" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="Background" Value="Transparent" /><Setter Property="BorderBrush" Value="Transparent" /><Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem">
+                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" /></Trigger>
+                    <Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="{DynamicResource KinoAccentSoftBrush}" /><Setter Property="BorderBrush" Value="{DynamicResource KinoAccentBrush}" /></Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate></Setter.Value></Setter>
+        </Style>
+    </ui:FluentWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="36" /><RowDefinition /></Grid.RowDefinitions>
+        <ui:TitleBar Title="站点管理 · KINO" ShowMinimize="False" ShowMaximize="False" />
+        <Grid x:Name="ManagerContent" Grid.Row="1" Margin="22,16,22,20">
+            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+            <Grid Margin="0,0,0,20">
+                <StackPanel><TextBlock Text="你的中转站" FontSize="25" FontWeight="SemiBold" /><TextBlock Text="连接分别保存，随时切换当前监测的站点。" FontSize="12" Foreground="{DynamicResource KinoMutedBrush}" Margin="0,5,0,0" /></StackPanel>
+                <ui:Button x:Name="AddSiteButton" Content="＋ 新增站点" Click="AddClicked" Appearance="Primary" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="14,8" />
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="235" /><ColumnDefinition Width="20" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                <Border BorderBrush="{DynamicResource KinoBorderBrush}" BorderThickness="1" CornerRadius="8" Background="{DynamicResource KinoSurfaceBrush}" Padding="5">
+                    <Grid><ListBox x:Name="SitesList" BorderThickness="0" Background="Transparent" Padding="0" ItemContainerStyle="{StaticResource SiteListItem}" SelectionChanged="SiteSelected" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate><DataTemplate><StackPanel Margin="5,7">
+                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxWidth="190" />
+                            <TextBlock Text="{Binding Summary}" FontSize="10.5" Foreground="{DynamicResource KinoMutedBrush}" Margin="0,5,0,0" TextTrimming="CharacterEllipsis" MaxWidth="190" />
+                        </StackPanel></DataTemplate></ListBox.ItemTemplate>
+                    </ListBox><TextBlock x:Name="EmptyText" Text="还没有站点&#10;点击右上角新增" TextAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource KinoMutedBrush}" FontSize="12" /></Grid>
+                </Border>
+                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="DetailsPanel">
+                    <TextBlock x:Name="ActiveLabel" FontSize="11" Foreground="{DynamicResource KinoAccentBrush}" Margin="0,1,0,16" />
+                    <TextBlock Text="站点名称" Style="{StaticResource FormLabel}" />
+                    <Grid Margin="0,0,0,17"><Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBox x:Name="ProfileNameBox" TextChanged="NameChanged" Margin="0,0,8,0" MaxLength="80" /><Button x:Name="RenameButton" Content="重命名" Grid.Column="1" Click="RenameClicked" Padding="10,6" />
+                    </Grid>
+                    <TextBlock Text="接入方式" Style="{StaticResource FormLabel}" /><TextBlock x:Name="ProtocolText" Margin="0,0,0,17" />
+                    <TextBlock Text="站点地址" Style="{StaticResource FormLabel}" /><TextBox x:Name="AddressText" IsReadOnly="True" TextWrapping="Wrap" MaxHeight="96" VerticalScrollBarVisibility="Auto" Margin="0,0,0,17" />
+                    <TextBlock Text="凭据由 Windows 加密保存。修改连接时会重新验证。" TextWrapping="Wrap" Foreground="{DynamicResource KinoMutedBrush}" FontSize="11" Margin="0,0,0,18" />
+                    <WrapPanel><ui:Button x:Name="UseSiteButton" Content="切换到此站点" Click="UseClicked" Appearance="Primary" Margin="0,0,8,8" Padding="12,7" />
+                        <Button x:Name="EditSiteButton" Content="编辑连接" Click="EditClicked" Padding="12,7" Margin="0,0,8,8" /><Button x:Name="DeleteSiteButton" Content="删除" Click="DeleteClicked" Padding="12,7" Margin="0,0,8,8" />
+                        <Button x:Name="BalanceAlertButton" Content="余额提醒" Click="BalanceAlertClicked" Padding="12,7" Margin="0,0,0,8" /></WrapPanel>
+                    <TextBlock x:Name="AlertSummary" FontSize="11" Foreground="{DynamicResource KinoMutedBrush}" TextWrapping="Wrap" Margin="0,3,0,0" />
+                </StackPanel>
+                </ScrollViewer>
+            </Grid>
+            <StackPanel Grid.Row="2" Margin="0,15,0,0">
+                <Border x:Name="DeletePrompt" Visibility="Collapsed" Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                    <Grid><Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBlock x:Name="DeletePromptText" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,12,0" FontSize="12" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal"><Button x:Name="ConfirmDeleteButton" Content="确认删除" Click="ConfirmDeleteClicked" Padding="10,6" Margin="0,0,8,0" /><Button Content="取消" Click="CancelDeleteClicked" Padding="10,6" /></StackPanel>
+                    </Grid>
+                </Border>
+                <TextBlock x:Name="ResultText" Text="仅刷新当前站点，切换后立即重新读取数据。" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource KinoMutedBrush}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

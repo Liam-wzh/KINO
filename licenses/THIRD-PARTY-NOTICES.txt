@@ -1,0 +1,34 @@
+Third-party notices
+
+## TaskMonitor
+
+Project: https://github.com/linesoft2/TaskMonitor
+
+Copyright 2026 双霖 (LineSoft).
+
+Licensed under Apache License 2.0. The full license is included in `licenses/TaskMonitor-Apache-2.0.txt`.
+
+KINO adapts the DirectN device / swap-chain / DirectComposition setup and native taskbar hosting approach into an AI relay usage tool. Changes include the platform data adapters, independent settings model, UI, rendering layout, lifecycle and tests. KINO is a separate project. Reference revision: `85113b03a57dcbf1a0b41356783d663676a4799f`.
+
+## Runtime and packaging components
+
+| Component | Version | License / upstream |
+| --- | --- | --- |
+| DirectN | 1.18.0 | MIT · https://github.com/smourier/DirectN |
+| FluentWpfCore | 1.0.5 | MIT · https://github.com/TwilightLemon/FluentWpfCore |
+| WPF UI | 3.0.5 | MIT · https://github.com/lepoco/wpfui |
+| LiveCharts2 (Core / SkiaSharpView / WPF) | 2.0.5 | MIT · https://github.com/beto-rodriguez/LiveCharts2 |
+| SkiaSharp (Core / HarfBuzz / WPF / Desktop views / Win32 native assets) | 3.119.0 | MIT and bundled native notices · https://github.com/mono/SkiaSharp |
+| HarfBuzzSharp / Win32 native assets | 8.3.1.1 | MIT and bundled native notices · https://github.com/mono/SkiaSharp |
+| Newtonsoft.Json | 13.0.3 | MIT · https://github.com/JamesNK/Newtonsoft.Json |
+| System.Diagnostics.DiagnosticSource | 4.3.0 | MIT · https://github.com/dotnet/corefx |
+| Costura.Fody | 5.7.0 | MIT · https://github.com/Fody/Costura |
+| Fody | 6.8.0 | Build-time dependency · https://github.com/Fody/Fody |
+
+The third-party libraries retain their original licenses and notices, reproduced in `licenses/`. Runtime dependencies can be replaced by placing ABI-compatible assemblies beside `KINO.exe`, or by rebuilding the provided source against the replacement libraries.
+
+LiveCharts2 is pinned to the 2.0.5 packages (source revision `e8a67f59bae283d2e88b1e8d30ef1bf7bcf5b5d5`). Its MIT license is in `licenses/LiveCharts2-LICENSE.txt`. SkiaSharp and HarfBuzzSharp MIT licenses and their bundled native component notices are included separately in `licenses/SkiaSharp-*` and `licenses/HarfBuzzSharp-*`. Native DLLs are distributed in the `x86`, `x64` and `arm64` subdirectories. System.Memory, System.Buffers, System.Numerics.Vectors, System.Runtime.CompilerServices.Unsafe, System.Threading.Tasks.Extensions and Microsoft.Bcl.AsyncInterfaces use the Microsoft .NET MIT license reproduced in `licenses/Microsoft.NET-MIT.txt`.
+
+KINO does not reference or redistribute iNKORE.UI.WPF.Modern. Its current upstream license restricts incorporation into commercial products without written permission (https://github.com/iNKORE-NET/UI.WPF.Modern/blob/main/LICENSE.md). WPF UI provides the Fluent controls and themes used here.
+
+The KINO logo uses artwork supplied for this project, retained in `design/branding/logo-original.png`. `tools/generate_icon.py` removes the baked-in checkerboard background and creates the transparent mark and Windows icon sizes. UI colors and the Windows icon tile are applied by KINO. Optional site presets contain public connection details only.

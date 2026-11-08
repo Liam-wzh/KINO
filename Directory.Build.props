@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <!-- Keep the app and test hosts on the same architecture; native chart DLLs
+         are selected from x86/x64/arm64 at runtime. -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+</Project>

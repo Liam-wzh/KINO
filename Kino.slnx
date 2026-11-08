@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/Kino/Kino.csproj" />
+  <Project Path="tests/Kino.Tests/Kino.Tests.csproj" />
+  <Project Path="tests/Kino.UiSmoke/Kino.UiSmoke.csproj" />
+</Solution>

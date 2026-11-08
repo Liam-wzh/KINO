@@ -1,0 +1,101 @@
+<Window x:Class="Kino.UI.FlyoutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Kino.UI"
+        xmlns:fluent="https://github.com/TwilightLemon/FluentWpfCore"
+        Width="420" SizeToContent="Height" WindowStyle="None" ResizeMode="NoResize"
+        ShowInTaskbar="False" Background="Transparent" Icon="/KINO;component/Assets/kino.ico"
+        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI" FontSize="13"
+        fluent:WindowMaterial.WindowCorner="Round" Title="KINO · AI 用量"
+        Deactivated="OnDeactivated" PreviewKeyDown="OnKeyDown">
+    <fluent:WindowMaterial.Material>
+        <fluent:WindowMaterial x:Name="Acrylic" MaterialMode="Acrylic" UseWindowComposition="True"
+                               CompositonColor="#E6F5F5F5" IsDarkMode="False" />
+    </fluent:WindowMaterial.Material>
+    <Border x:Name="RootBorder" CornerRadius="10" BorderBrush="{DynamicResource KinoBorderBrush}" BorderThickness="1">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{DynamicResource {x:Type ScrollViewer}}">
+        <StackPanel>
+            <Grid Margin="22,18,16,0" MouseLeftButtonDown="HeaderMouseDown">
+                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="7" Width="32" Height="32" Margin="0,0,10,0"><Rectangle Style="{StaticResource KinoLogoStyle}" Width="24" Height="24" /></Border>
+                    <StackPanel>
+                        <TextBlock Text="KINO" FontWeight="SemiBold" FontSize="15" />
+                        <Button x:Name="SiteMenuButton" Click="SiteMenuClicked" Background="Transparent" BorderThickness="0" Padding="0,1" HorizontalAlignment="Left" ToolTip="切换或管理站点">
+                            <StackPanel Orientation="Horizontal"><TextBlock x:Name="SiteText" Text="我的 AI 中转站" FontSize="11" Foreground="{DynamicResource KinoMutedBrush}" MaxWidth="180" TextTrimming="CharacterEllipsis" /><TextBlock Text="&#xE70D;" FontFamily="Segoe MDL2 Assets" FontSize="8" Margin="6,4,0,0" Foreground="{DynamicResource KinoMutedBrush}" /></StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ToggleButton x:Name="PinButton" Style="{StaticResource ChromeButtonStyle}" ToolTip="固定卡片，可拖动标题移动" Click="PinClicked">
+                        <TextBlock Text="&#xE718;" FontFamily="Segoe MDL2 Assets" FontSize="13" />
+                    </ToggleButton>
+                    <Button Style="{StaticResource ChromeButtonStyle}" ToolTip="设置" Click="SettingsClicked">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="14" />
+                    </Button>
+                    <Button Style="{StaticResource ChromeButtonStyle}" ToolTip="收起" Click="CloseClicked">
+                        <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="11" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <Grid Margin="23,17,23,0">
+                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <TextBlock x:Name="BalanceLabel" Text="可用余额" Style="{StaticResource SectionLabel}" Margin="0" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse x:Name="StatusDot" Width="5" Height="5" Fill="{DynamicResource KinoAccentBrush}" Margin="0,0,6,0" />
+                    <TextBlock x:Name="StatusText" Text="演示模式" FontSize="11" Foreground="{DynamicResource KinoMutedBrush}" />
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="BalanceSection" Margin="21,3,20,0">
+                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <TextBlock x:Name="BalanceText" Text="$124.86" FontSize="36" FontWeight="SemiBold" FontFamily="Segoe UI Variable Display, Segoe UI" />
+                <ToggleButton x:Name="PrivacyButton" Grid.Column="1" Style="{StaticResource ChromeButtonStyle}" VerticalAlignment="Center" ToolTip="隐藏或显示金额" Click="PrivacyClicked">
+                    <TextBlock x:Name="PrivacyIcon" Text="&#xE890;" FontFamily="Segoe MDL2 Assets" FontSize="15" />
+                </ToggleButton>
+            </Grid>
+            <TextBlock x:Name="ScopeText" Text="演示数据 · 未连接真实账户" Foreground="{DynamicResource KinoMutedBrush}" FontSize="11" Margin="23,2,23,12" />
+
+            <UniformGrid x:Name="MetricsGrid" Columns="2" Margin="18,0,18,8" />
+
+            <StackPanel x:Name="ChartSection" Margin="23,3,23,5">
+                <Grid Margin="0,0,0,7">
+                    <TextBlock x:Name="ChartLabel" Text="今日消费 · 按小时" FontWeight="SemiBold" FontSize="12" />
+                    <Border HorizontalAlignment="Right" Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="4" Padding="6,2">
+                        <TextBlock x:Name="ChartUnit" Text="USD" Foreground="{DynamicResource KinoAccentBrush}" FontSize="10" />
+                    </Border>
+                </Grid>
+                <local:UsageChart x:Name="Chart" />
+            </StackPanel>
+
+            <StackPanel x:Name="ModelsSection" Margin="23,5,23,5">
+                <Grid Margin="0,0,0,8">
+                    <TextBlock Text="模型用量" FontWeight="SemiBold" FontSize="12" />
+                    <TextBlock x:Name="ModelsPeriodText" Text="今日 Token" HorizontalAlignment="Right" FontSize="10" Foreground="{DynamicResource KinoMutedBrush}" />
+                </Grid>
+                <StackPanel x:Name="ModelRows" />
+            </StackPanel>
+
+            <Border x:Name="NoticeBorder" Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="6" Padding="10,7" Margin="23,4,23,10">
+                <TextBlock x:Name="NoticeText" Text="当前为演示模式，可在设置中连接你的中转站。" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource KinoMutedBrush}" />
+            </Border>
+
+            <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource KinoBorderBrush}" Padding="19,8,18,8">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="RefreshButton" Style="{StaticResource ChromeButtonStyle}" Width="26" Height="26" ToolTip="立即刷新" Click="RefreshClicked">
+                            <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
+                        </Button>
+                        <TextBlock x:Name="UpdatedText" Text="刚刚更新" Foreground="{DynamicResource KinoMutedBrush}" FontSize="10.5" VerticalAlignment="Center" Margin="4,0,0,0" />
+                    </StackPanel>
+                    <Button x:Name="ConsoleButton" Grid.Column="1" Background="Transparent" BorderThickness="0" Padding="8,4" Click="ConsoleClicked" FontSize="11">
+                        <StackPanel Orientation="Horizontal"><TextBlock Text="打开控制台" /><TextBlock Text="&#xE8A7;" FontFamily="Segoe MDL2 Assets" FontSize="10" Margin="7,2,0,0" /></StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+        </StackPanel>
+        </ScrollViewer>
+    </Border>
+</Window>

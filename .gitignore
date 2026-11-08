@@ -1,0 +1,14 @@
+bin/
+obj/
+.vs/
+.idea/
+artifacts/
+*.user
+*.suo
+*.log
+settings.json
+settings.json.tmp
+shutdown.sentinel
+.env
+.env.*
+!.env.example

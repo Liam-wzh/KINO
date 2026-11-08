@@ -1,0 +1,95 @@
+<ui:FluentWindow x:Class="Kino.UI.ConnectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="连接站点 · KINO" Icon="/KINO;component/Assets/kino.ico" Width="600" Height="800" MinHeight="620"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI" FontSize="13"
+        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+        ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica">
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="36" /><RowDefinition /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+        <ui:TitleBar Title="KINO" ShowMinimize="False" ShowMaximize="False" />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="32,16,32,20">
+            <StackPanel>
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="66" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                    <Border Width="52" Height="52" CornerRadius="13" Background="{DynamicResource KinoAccentSoftBrush}" VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <Rectangle Style="{StaticResource KinoLogoStyle}" Width="39" Height="39" />
+                    </Border>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock x:Name="IntroTitle" Text="连接你的 AI 中转站" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,7" />
+                        <TextBlock Text="余额、消费与 Token，常驻你的任务栏。" Foreground="{DynamicResource KinoMutedBrush}" FontSize="12" />
+                    </StackPanel>
+                </Grid>
+                <StackPanel x:Name="ConnectionForm">
+                    <Grid Margin="0,0,0,22">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="30" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                        <TextBlock Text="01" Foreground="{DynamicResource KinoAccentBrush}" FontWeight="SemiBold" Margin="0,2,0,0" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="选择平台，填写站点地址" FontWeight="SemiBold" Margin="0,0,0,12" />
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="14" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="平台" Style="{StaticResource FormLabel}" />
+                                    <ComboBox x:Name="ProviderBox" SelectionChanged="ConnectionChanged"><ComboBoxItem Content="New API" /><ComboBoxItem Content="Sub2API" /></ComboBox>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="快速填写（可选）" Style="{StaticResource FormLabel}" />
+                                    <ComboBox x:Name="PresetBox" DisplayMemberPath="Name" SelectionChanged="PresetChanged" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="站点地址" Style="{StaticResource FormLabel}" />
+                            <TextBox x:Name="UrlBox" TextChanged="AddressChanged" MinHeight="36" AutomationProperties.Name="站点地址" />
+                            <TextBlock Text="例如 https://api.example.com，也支持部署在子目录的站点。" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource KinoMutedBrush}" Margin="0,6,0,0" />
+                            <StackPanel x:Name="Sub2AuthPanel" Margin="0,14,0,0">
+                                <TextBlock Text="认证方式" Style="{StaticResource FormLabel}" />
+                                <ComboBox x:Name="Sub2AuthBox" SelectionChanged="ConnectionChanged"><ComboBoxItem Content="API Key · 当前 Key 用量" /><ComboBoxItem Content="账户访问令牌 JWT · 整个账户" /></ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="30" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                        <TextBlock Text="02" Foreground="{DynamicResource KinoAccentBrush}" FontWeight="SemiBold" Margin="0,2,0,0" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="添加读取凭据" FontWeight="SemiBold" Margin="0,0,0,8" />
+                            <TextBlock x:Name="CredentialHelp" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource KinoMutedBrush}" Margin="0,0,0,10" />
+                            <Button x:Name="SecurityButton" Content="打开安全设置  ↗" Click="SecurityClicked" HorizontalAlignment="Left" Padding="12,7" Margin="0,0,0,11" />
+                            <WrapPanel x:Name="ScopePanel" Margin="0,0,0,7">
+                                <Border Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="4" Padding="9,5" Margin="0,0,8,6"><TextBlock Text="用户资料 · profile:read" FontSize="11" /></Border>
+                                <Border Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="4" Padding="9,5" Margin="0,0,0,6"><TextBlock Text="用量统计 · usage:read" FontSize="11" /></Border>
+                            </WrapPanel>
+                            <TextBlock x:Name="TokenLabel" Text="用户访问令牌" Style="{StaticResource FormLabel}" />
+                            <PasswordBox x:Name="TokenBox" PasswordChanged="TokenChanged" MinHeight="36" AutomationProperties.Name="连接凭据" />
+                            <TextBlock x:Name="TokenHint" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource KinoMutedBrush}" Margin="0,7,0,13" />
+                            <Expander Header="更多选项" FontSize="12">
+                                <StackPanel Margin="0,8,0,0">
+                                    <TextBlock Text="显示名称（可选，留空使用域名）" Style="{StaticResource FormLabel}" />
+                                    <TextBox x:Name="SiteNameBox" Margin="0,0,0,12" />
+                                    <StackPanel x:Name="NewApiOptions">
+                                        <TextBlock Text="用户 ID（部分版本需要）" Style="{StaticResource FormLabel}" />
+                                        <TextBox x:Name="UserIdBox" Margin="0,0,0,6" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+                <Border x:Name="ResultBorder" Visibility="Collapsed" Background="{DynamicResource KinoAccentSoftBrush}" CornerRadius="6" Padding="11,9" Margin="30,15,0,0">
+                    <TextBlock x:Name="ResultText" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource KinoWarningBrush}" />
+                </Border>
+                <TextBlock Text="凭据仅在本机加密保存，验证时只读取所填站点的用量接口。" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource KinoMutedBrush}" Margin="30,18,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+        <Border Grid.Row="2" BorderBrush="{DynamicResource KinoBorderBrush}" BorderThickness="0,1,0,0" Padding="24,13">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="DemoButton" Content="先看演示" Click="DemoClicked" Background="Transparent" BorderThickness="0" Padding="5,7" FontSize="12" />
+                    <Button x:Name="AdvancedButton" Content="完整设置" Click="AdvancedClicked" Background="Transparent" BorderThickness="0" Padding="9,7" Margin="4,0,0,0" FontSize="12" />
+                </StackPanel>
+                <ui:Button x:Name="ConnectButton" Grid.Column="1" Content="验证并连接" Appearance="Primary" MinWidth="120" Click="ConnectClicked" />
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>
